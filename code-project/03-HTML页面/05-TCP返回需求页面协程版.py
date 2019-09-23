@@ -1,0 +1,81 @@
+# -*- coding:utf-8 -*-
+
+"""
+Name: 05-TCP返回需求页面协程版.py
+Author: fengdi
+Datetime: 09:03 2019-07-09
+Description:
+
+"""
+
+import socket
+import re
+import gevent
+from gevent import monkey
+
+monkey.patch_all()
+
+HOST = ""
+PORT = 7890
+server_addr = (HOST, PORT)
+
+
+class Wsgiserver(object):
+
+    def __init__(self, addr):
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server_socket.bind(addr)
+        self.server_socket.listen(128)
+
+    def server_forever(self):
+        while True:
+            tmp_socket, addr = self.server_socket.accept()
+            gevent.spawn(self.handler_req, tmp_socket)
+
+        self.server_socket.close()
+
+    # 定义请求处理函数
+    def handler_req(self, client_socket):
+
+        # 接收请求数据
+        recv_data = client_socket.recv(1024).decode("utf-8")
+        print(">" * 50)
+        print(recv_data)
+
+        # 从请求数据内提取请求文件名
+        request_lines = recv_data.splitlines()
+        ret = re.match(r"[^/]+(/[^ ]*)", request_lines[0])
+
+        file_name = ""
+        if ret:
+            file_name = ret.group(1)
+            if file_name == "/":
+                file_name = "/index.html"
+
+        # 根据请求文件名打开文件读取,返回文件内容给客户端
+        try:
+            f = open("./html" + file_name, "rb")
+        except:
+            response_header = "HTTP/1.1 404 NOT FOUND\r\n"
+            response_header += "\r\n"
+            response_body = "------file not found------"
+            response = response_header + response_body
+            client_socket.send(response.encode("utf-8"))
+        else:
+            html_content = f.read()
+            f.close()
+            response_header = "HTTP/1.1 200 OK\r\n"
+            response_header += "\r\n"
+            response_body = html_content
+            response = response_header.encode("utf-8") + response_body
+            client_socket.send(response)
+
+        # 关闭临时套接字
+        client_socket.close()
+
+
+if __name__ == '__main__':
+    myserver = Wsgiserver(server_addr)
+    print("server running on port %s" % PORT)
+    myserver.server_forever()
