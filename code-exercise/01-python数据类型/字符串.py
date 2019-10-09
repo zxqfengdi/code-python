@@ -29,20 +29,34 @@ print(type(str5))
 print(str4)
 print(str5)
 
+# 字符串相关内置函数：repr() chr() ord() len()
+# repr(): 返回包含一个对象的可打印表示形式的字符串
+print(repr(10), type(repr(10)))
+
+# chr(): 将数字转换为ASCII码中对应的字符
+print(chr(97))
+
+# ord()：将字符转换为对应ASCII数字
+print(ord('a'))
+
+# len()：获取字符串长度
+print(len('hello world'))
+
 # 字符串相关操作：索引、分片、加、乘、成员检查、长度、最大值、最小值（序列类型通用操作）
 
-print(str2[0])   # 打印索引为0的字符（索引从0开始）
+print(str2[0])   # 打印索引为0的字符
 print(str2[6])   # 打印索引为6的字符
+print(str2[-1])  # 打印倒数第一个字符（负值索引从-1开始）
 
-print(str2[0:5])   # 打印索引0-4的字符串
-print(str2[-5:])   # 打印索引-5到末尾的字符串
+print(str2[0:5])   # 打印索引0-4的字符串(不包括最后索引)
+print(str2[-5:])   # 打印索引-5到末尾的字符串（省略取到字符串末尾）
 
 print(str2 + ' ' + str4)   # 字符串相加即连接
 
 print(str2 * 2)            # 字符串乘以数字即重复输出
 
 print('girl' in str2)      # 成员检查即确认子字符串是否存在于原字符串中：返回值为布尔值（True  False）
-print('boy' in str2)
+print('boy' not in str2)
 
 print(len(str2))           # len()：内置函数，打印字符串长度
 print(len(str3))
@@ -79,19 +93,19 @@ print(dir(str))
 str6 = "Hello fengdi! my name is yuxi."
 str7 = " Hello world! "
 
-str6_list = str6.split()    # split()方法返回字符串里面的单词列表
+str6_list = str6.split()    # split()方法返回以特定分隔符分割的字符串列表（默认为空白符）
 print(type(str6_list))
 print(str6_list)
 
-print(str7.strip())         # 返回当前字符串去掉两端空格的字符串副本（lstrip()、rstrip()）
+print(str7.strip())         # 去掉字符串两端空白（lstrip()、rstrip()）
 print(str7.lstrip())
 print(str7.rstrip())
 
-print(str7.upper())         # 返回当前字符串全部大写的副本（lower()、title()、isupper()、islower()）
+print(str7.upper())         # 字符串大写（lower()、title()、isupper()、islower()）
 print(str7.lower())
 print(str7.title())
-print(str7.islower())
-print(str7.isupper())
+print(str7.islower())  # 布尔值
+print(str7.isupper())  # 布尔值
 
 print(str7.find('world'))   # 返回子字符串的最小索引，未找到返回-1
 print(str7.index('word'))  # 返回子字符串的最小索引，未找到抛出异常
