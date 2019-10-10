@@ -8,7 +8,7 @@ Description: 主要介绍字符串（不可变对象）的表示方法、相关�
 
 """
 
-# 字符串表示方法：单引号、双引号、转义字符、原始字符串
+# 字符串表示方法：单引号、双引号、三引号（多行字符串）、转义字符、原始字符串(r/R)
 
 str1 = 'Fengdi tell me that:"Everything is possible!"'
 print(type(str1))
