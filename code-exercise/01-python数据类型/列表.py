@@ -100,8 +100,8 @@ print(list(list08))
 
 copy_list01 = ['hello', 20, ['python', 'java'], {"name":"fengdi", "age":24}, ('name', 'city')]
 copy_list02 = copy_list01      # 此处为赋值，内存中为直接引用
-copy_list03 = copy_list01.copy()    # 列表对象自带的浅复制，整体对象为一个新的副本，并非引用
-copy_list04 = copy.copy(copy_list01)    # copy模块中的浅复制，整体对象为一个新的副本，并非引用
+copy_list03 = copy_list01.copy()    # 列表对象自带的浅拷贝，整体对象为一个新对象，内部仍为引用
+copy_list04 = copy.copy(copy_list01)    # copy模块中的浅拷贝，整体对象为一个新对象，内部仍为引用
 
 print(id(copy_list01), copy_list01)
 print(id(copy_list02), copy_list02)
