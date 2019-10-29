@@ -18,6 +18,7 @@ import pymysql
 conn = pymysql.connect(host="localhost", port=3306, database="python_test",
                        user="yuxi", password="199618", charset="utf8")
 
+# 应先判断数据库是否连接上
 if conn:
     print("连接数据库成功！")
 
