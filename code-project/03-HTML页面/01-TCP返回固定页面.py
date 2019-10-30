@@ -9,54 +9,60 @@ Description:
 """
 import socket
 
-HOST = ""
-PORT = 7890
+HOST = ''
+PORT = 12580
 ADDR = (HOST, PORT)
 
 
-# 定义请求处理函数
-def handler_req(tmp_socket):
+# 请求处理函数
+def handle_req(tmp_socket):
+    """
+    params：tmp_socket （通信使用的套接字）
+    return: 服务器响应（固定页面）
+    """
+    # 接收客户端请求并打印
+    recv_data = tmp_socket.recv(1024)
+    req = recv_data.decode('utf-8')
+    print(req)
 
-    # 接收请求信息并打印
-    recv_data = tmp_socket.recv(1024).decode("utf-8")
-    print(recv_data)
-    print("*" * 50)
+    print('*' * 50)
 
-    # 组织响应头部信息
-    response_header = "HTTP/1.1 200 OK\r\n"
-    response_header += "\r\n"  # 空行分割body
+    # 组织服务器响应(响应头部和响应主体以空行分割)
+    response_header = 'HTTP/1.1 200 OK\r\n'
 
-    # 组织响应内容
-    response_body = "hello world"
-    print(response_body)
-    response = response_header + response_body
+    response_boby = '<h1>hello world</h1><p>我是服务器返回的页面内容</p>'
 
-    # 发送响应内容
-    tmp_socket.send(response.encode("utf-8"))
+    response = response_header + '\r\n' + response_boby
 
-    # 关闭临时套接字
+    tmp_socket.send(response.encode('utf-8'))
+
+    # 关闭套接字
     tmp_socket.close()
 
 
 def main():
-
-    # 创建tcp服务端套接字
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    # 创建套接字
+    tcp_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    tcp_server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # 地址复用问题
 
     # 绑定地址
-    server_socket.bind(ADDR)
+    tcp_server_socket.bind(ADDR)
 
-    # 监听连接
-    server_socket.listen(5)
+    # 被动监听
+    tcp_server_socket.listen(128)
 
-    # 接受客户端连接及请求处理
+    print('waiting for requests......')
+
+    # 服务器循环
     while True:
-        tmp_socket, addr = server_socket.accept()
-        handler_req(tmp_socket)
+        # 接收客户端连接
+        tmp_socket, addr = tcp_server_socket.accept()
 
-    # 关闭套接字
-    server_socket.close()
+        # 使用临时套接字处理客户端请求
+        handle_req(tmp_socket)
+
+    # 关闭监听套接字
+    tcp_server_socket.close()
 
 
 if __name__ == '__main__':
