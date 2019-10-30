@@ -22,7 +22,7 @@ def handler_req(tmp_socket):
     recv_data = tmp_socket.recv(1024).decode("utf-8")
     print(recv_data)
 
-    # 从请求数据内提取请求文件名
+    # 从请求数据内提取请求文件名（使用正则）
     request_lines = recv_data.splitlines()
     ret = re.match(r"[^/]+(/[^ ]*)", request_lines[0])
 
