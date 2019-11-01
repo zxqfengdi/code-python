@@ -7,75 +7,79 @@ Datetime: 09:03 2019-07-09
 Description:
 
 """
-
-import socket
-import re
-import gevent
 from gevent import monkey
+import re
+import socket
+import gevent
 
 monkey.patch_all()
 
-HOST = ""
-PORT = 7890
-server_addr = (HOST, PORT)
+HOST = ''
+PORT = 12580
+ADDR = (HOST, PORT)
 
 
+# 使用面向对象实现
 class Wsgiserver(object):
 
-    def __init__(self, addr):
+    # 服务器初始化
+    def __init__(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server_socket.bind(addr)
+        self.server_socket.bind(ADDR)
         self.server_socket.listen(128)
 
-    def server_forever(self):
+    # 服务器监听
+    def server_forver(self):
         while True:
             tmp_socket, addr = self.server_socket.accept()
-            gevent.spawn(self.handler_req, tmp_socket)
+            # 收到客户端连接就创建一个协程进行请求处理
+            gevent.spawn(self.handle_req, tmp_socket)
 
-        self.server_socket.close()
+    # 处理客户端请求
+    def handle_req(self, tmp_socket):
+        recv_data = tmp_socket.recv(1024)
+        req = recv_data.decode("utf-8")
 
-    # 定义请求处理函数
-    def handler_req(self, client_socket):
+        req_lines = req.splitlines()
 
-        # 接收请求数据
-        recv_data = client_socket.recv(1024).decode("utf-8")
-        print(">" * 50)
-        print(recv_data)
-
-        # 从请求数据内提取请求文件名
-        request_lines = recv_data.splitlines()
-        ret = re.match(r"[^/]+(/[^ ]*)", request_lines[0])
+        # 提取请求文件名
+        result = re.match(r'[^/]+(/[^ ]*)', req_lines[0])
 
         file_name = ""
-        if ret:
-            file_name = ret.group(1)
+        if result:
+            file_name = result.group(1)
             if file_name == "/":
                 file_name = "/index.html"
 
-        # 根据请求文件名打开文件读取,返回文件内容给客户端
+        # 组织服务器响应
         try:
-            f = open("./html" + file_name, "rb")
+            f = open("./html" + file_name, 'rb')
         except:
             response_header = "HTTP/1.1 404 NOT FOUND\r\n"
             response_header += "\r\n"
             response_body = "------file not found------"
             response = response_header + response_body
-            client_socket.send(response.encode("utf-8"))
+            tmp_socket.send(response.encode("utf-8"))
         else:
-            html_content = f.read()
+            content = f.read()
             f.close()
             response_header = "HTTP/1.1 200 OK\r\n"
             response_header += "\r\n"
-            response_body = html_content
+            response_body = content
             response = response_header.encode("utf-8") + response_body
-            client_socket.send(response)
+            tmp_socket.send(response)
 
         # 关闭临时套接字
-        client_socket.close()
+        tmp_socket.close()
+
+
+def main():
+    # 创建服务器实例对象
+    server = Wsgiserver()
+    # 启动服务器
+    server.server_forver()
 
 
 if __name__ == '__main__':
-    myserver = Wsgiserver(server_addr)
-    print("server running on port %s" % PORT)
-    myserver.server_forever()
+    main()

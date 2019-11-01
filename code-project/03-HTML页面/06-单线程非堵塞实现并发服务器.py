@@ -1,15 +1,15 @@
 # -*- coding:utf-8 -*-
 
 """
-Name: 04-TCP返回需求页面多线程版.py
+Name: 06-单线程非堵塞实现并发服务器.py
 Author: fengdi
-Datetime: 17:54 2019-07-08
-Description:
-
+Datetime: 5:31 下午 2019/10/31
+Description: 
 """
+
 import re
 import socket
-import threading
+
 
 HOST = ''
 PORT = 12580
@@ -25,20 +25,40 @@ class Wsgiserver(object):
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_socket.bind(ADDR)
         self.server_socket.listen(128)
+        self.tmp_socket_list = list()  # 创建列表保存接受连接产生的临时套接字引用
+        self.server_socket.setblocking(False)  # 设置监听套接字非堵塞
 
     # 服务器监听
     def server_forver(self):
         while True:
-            tmp_socket, addr = self.server_socket.accept()
-            # 收到客户端连接就创建一个线程进行请求处理
-            t1 = threading.Thread(target=self.handle_req, args=(tmp_socket,))
-            t1.start()
+            # 监听套接字非堵塞：需要进行异常处理，避免调用accept方法客户端还没有到来
+            try:
+                tmp_socket, addr = self.server_socket.accept()
+            except Exception as e:
+                pass
+            # 没有异常说明有客户端到来
+            else:
+                tmp_socket.setblocking(False)  # 设置临时套接字非堵塞
+                self.tmp_socket_list.append(tmp_socket)  # 将到来的客户端的套接字引用添加到列表内
+
+            # 临时套接字非堵塞：需要进行异常处理，避免调用recv方法还没有请求过来
+            for client in self.tmp_socket_list:
+                try:
+                    recv_data = client.recv(1024)
+                except Exception as e:
+                    pass
+                else:
+                    req = recv_data.decode("utf-8")
+                    # 如果req有数据说明客户端发送了请求,有数据且长度为0说明客户端断开连接
+                    if req:
+                        self.handle_req(req, client)
+                    else:
+                        # 关闭套接字
+                        client.close()
+                        self.tmp_socket_list.remove(client)
 
     # 处理客户端请求
-    def handle_req(self, tmp_socket):
-        recv_data = tmp_socket.recv(1024)
-        req = recv_data.decode("utf-8")
-
+    def handle_req(self, req, tmp_socket):
         req_lines = req.splitlines()
 
         # 提取请求文件名
