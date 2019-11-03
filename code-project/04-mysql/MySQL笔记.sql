@@ -98,7 +98,7 @@
         delete from student;  # 禁用，会清空表
         delete from student where id = 3;
 
-        -- 删除：修改标记记录的值
+        -- 逻辑删除：修改标记记录的值（数据不可随便删除，一般使用逻辑删除）
         update student set isdelete=1 where id = 1;
 
     -- 修改
