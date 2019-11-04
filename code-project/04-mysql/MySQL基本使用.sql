@@ -90,8 +90,8 @@
         insert into student(name, age, cls_id, birthday) values ('小李', 15, 2, "2009-10-23");
 
         -- 多行插入
-        -- 部分列多行插入：insert into 数据表名(字段1, ...) values (值1, ...) (值1, ...) (值1, ...);
-        -- 全列多行插入：insert into 数据表名 values () () ();
+        -- 部分列多行插入：insert into 数据表名(字段1, ...) values (值1, ...), (值1, ...), (值1, ...);
+        -- 全列多行插入：insert into 数据表名 values (), (), ();
 
     -- 删除
         -- delete from 表名 where 条件;
