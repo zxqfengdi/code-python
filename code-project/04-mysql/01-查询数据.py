@@ -7,7 +7,6 @@ Datetime: 11:38 2019-07-13
 Description:
 
 """
-
 from pymysql import *
 
 
