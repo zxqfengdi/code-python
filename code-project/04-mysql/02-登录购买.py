@@ -75,7 +75,7 @@ class JD(object):
             print(item)
 
     def buy(self):
-        product_id = input("请输入商品ID:")
+        product_id = int(input("请输入商品ID:"))
         product_quality = int(input("请输入购买商品数量:"))
         order_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
@@ -97,7 +97,7 @@ class JD(object):
 
         # 将订单详情插入订单详情表
         order_detail_sql = """INSERT INTO order_detail(order_id, good_id, quality) VALUES (%s, %s, %s)"""
-        params = [order_id, int(product_id), int(product_quality)]
+        params = [order_id, product_id, product_quality]
         self.execute_sql(order_detail_sql, params)
         self.conn.commit()
 
