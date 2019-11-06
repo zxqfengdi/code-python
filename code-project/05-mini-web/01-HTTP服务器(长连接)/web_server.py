@@ -24,7 +24,7 @@ class Wsgiserver(object):
     def __init__(self, addr):
         """
         创建tcp服务器对象，绑定地址，开启监听
-        :param addr: TCP服务器地址
+        param addr: TCP服务器地址
         """
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -101,6 +101,8 @@ class Wsgiserver(object):
 
                     response = response_header.encode("utf-8") + response_body
                     client_socket.send(response)
+
+        client_socket.close()
 
 
 def main():

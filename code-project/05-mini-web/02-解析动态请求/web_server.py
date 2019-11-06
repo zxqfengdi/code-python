@@ -102,7 +102,7 @@ class Wsgiserver(object):
                     response = response_header.encode("utf-8") + response_body
                     client_socket.send(response)
             else:
-                response_body = "hahhaha" + time.ctime()
+                response_body = "hahhaha " + time.ctime()
 
                 response_header = "HTTP/1.1 200 OK\r\n"
                 response_header += "Content-Length: %d\r\n" % (len(response_body))
@@ -111,6 +111,7 @@ class Wsgiserver(object):
                 response = response_header + response_body
                 client_socket.send(response.encode("utf-8"))
 
+        client_socket.close()
 
 
 def main():
