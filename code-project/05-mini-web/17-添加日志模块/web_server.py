@@ -51,7 +51,6 @@ class Wsgiserver(object):
 
         # 接收请求数据
         recv_data = client_socket.recv(1024).decode("utf-8")
-        print(">" * 50)
         print(recv_data)
 
         # 从请求数据内提取请求文件名

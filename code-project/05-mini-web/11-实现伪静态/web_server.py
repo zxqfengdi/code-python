@@ -105,7 +105,7 @@ class Wsgiserver(object):
                 response_body = self.application(env, self.set_response_header)
 
                 response_header = "HTTP/1.1 %s\r\n" % self.status
-                response_header += "Content-Length: %d\r\n" % len(response_body)
+                response_header += "Content-Length: %d\r\n" % len(response_body.encode("utf-8"))
 
                 for temp in self.headers:
                     response_header += "%s:%s\r\n" % (temp[0], temp[1])

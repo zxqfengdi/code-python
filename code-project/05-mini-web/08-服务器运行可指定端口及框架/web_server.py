@@ -77,7 +77,7 @@ class Wsgiserver(object):
             if not file_name.endswith('.py'):
                 # 根据请求文件名打开文件读取,返回文件内容给客户端
                 try:
-                    f = open("./static" + file_name, "rb")
+                    f = open(self.static_path + file_name, "rb")
                 except FileNotFoundError:
                     response_body = "------file not found------"
 
@@ -116,6 +116,8 @@ class Wsgiserver(object):
                 response = response_header + response_body
                 client_socket.send(response.encode("utf-8"))
 
+        client_socket.close()
+
     def set_response_header(self, status, headers):
         self.status = status
         self.headers = [('server', 'mini_web v1.0')]
@@ -141,6 +143,7 @@ def main():
         print("请按照下面方式运行：python3 xxxx.py 7890 mini_frame:application")
         return
 
+    # 使用字符串split()方法
     ret = re.match(r'([^:]+):(.*)', frame_app_name)
 
     if ret:
