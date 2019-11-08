@@ -97,9 +97,6 @@ class Wsgiserver(object):
             response = response_header + response_body
             client_socket.send(response.encode("utf-8"))
 
-        # 关闭临时套接字
-        client_socket.close()
-
     def set_response_header(self, status, headers):
         self.status = status
         self.headers = [('server', 'mini_web v1.0')]
