@@ -1,6 +1,31 @@
 from django.db import models
 
 
+# 管理器类
+class BookInfoManager(models.Manager):
+    """图书管理器类"""
+
+    # 改变查询的结果
+    def all(self):
+        # 1. 调用父类的all方法获得所有结果
+        books = super().all()
+        # 2. 进行相关处理
+        books = books.filter(is_delete=False)
+        # 返回处理后结果
+        return books
+
+    # 封装方法操作模型类对应的数据表
+    def create_book(self, btitle, bpub_date):
+        # 创建对象
+        book = self.model()
+        book.btitle = btitle
+        book.bpub_date = bpub_date
+        # 保存对象
+        book.save()
+
+        return book
+
+
 # 数据模型类
 class BookInfo(models.Model):
     """图书模型类"""
@@ -14,6 +39,9 @@ class BookInfo(models.Model):
     bcomment = models.IntegerField(default=0)
     # 删除标记（逻辑删除）
     is_delete = models.BooleanField(default=False)
+
+    # 创建自定义管理器类对象
+    objects = BookInfoManager()
 
     def __str__(self):
         return self.btitle
@@ -34,4 +62,15 @@ class HeroInfo(models.Model):
 
     def __str__(self):
         return self.hname
+
+
+class AreasInfo(models.Model):
+    """自关联：区域信息类"""
+    aname = models.CharField(max_length=30)
+    aname_en = models.CharField(max_length=30)
+    pid = models.ForeignKey('self', null=True, blank=True)
+
+    def __str__(self):
+        return self.aname
+
 

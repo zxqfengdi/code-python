@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from books.models import BookInfo
+from django.http import HttpResponse
+from books.models import BookInfo, AreasInfo
 from datetime import date
 
 
@@ -28,3 +29,17 @@ def delete(request, book_id):
 
     # 页面重定向到首页
     return redirect('/books/index/')
+
+
+def areas(request):
+    area = AreasInfo.objects.get(aname='广州市')
+    parent_area = area.pid
+    son_areas = area.areasinfo_set.all()
+
+    context = {
+        'area': area,
+        'parent_area': parent_area,
+        'son_areas': son_areas
+    }
+
+    return render(request, 'books/areas.html', context)
