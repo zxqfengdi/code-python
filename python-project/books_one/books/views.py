@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from books.models import BookInfo, HeroInfo
-
+from books.models import BookInfo
+from django.template import loader, RequestContext
 
 # 视图函数
 def show_books(request):
