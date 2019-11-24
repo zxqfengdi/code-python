@@ -36,3 +36,7 @@ class AreasInfo(models.Model):
 
     title.admin_order_field = 'aname'  # 方法作为显示列可点击排序
     title.short_description = '区域名称'  # 方法作为显示列的别名
+
+
+class ImageUpload(models.Model):
+    pic = models.ImageField(upload_to='books')
