@@ -1,5 +1,5 @@
 from django.contrib import admin
-from books.models import BookInfo, AreasInfo, ImageUpload
+from books.models import BookInfo, AreasInfo, ImageUpload, GoodsInfo
 
 
 # 在一类的编辑页面嵌入关联模型的编辑选项
@@ -32,3 +32,4 @@ class AreasInfoAdmin(admin.ModelAdmin):
 admin.site.register(BookInfo, BookInfoAdmin)
 admin.site.register(AreasInfo, AreasInfoAdmin)
 admin.site.register(ImageUpload)
+admin.site.register(GoodsInfo)
