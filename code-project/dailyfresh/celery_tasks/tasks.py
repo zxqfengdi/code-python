@@ -2,6 +2,12 @@
 from django.conf import settings
 from django.core.mail import send_mail
 from celery import Celery
+import time
+import os
+import django
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dailyfresh.settings")
+django.setup()
 
 # 创建Celery类实例对象
 app = Celery('celery_tasks.tasks', broker='redis://192.168.31.199:6379/7')
@@ -18,3 +24,5 @@ def send_register_active_email(to_email, username, token):
     recipient_list = [to_email]
 
     send_mail(subject=subject, message='', from_email=from_email, recipient_list=recipient_list, html_message=html_message)
+
+    time.sleep(5)
