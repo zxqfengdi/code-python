@@ -6,5 +6,9 @@ urlpatterns = [
     # url(r'^register_handle/$', views.register_handle, name='register_handle'),  # 注册验证
     url(r'^register/$', views.RegisterView.as_view(), name='register'),  # 显示注册页面及注册验证(类视图)
     url(r'^active/(?P<token>.*)$', views.ActiveView.as_view(), name='active'),  # 用户激活
-    url(r'login/$', views.LoginView.as_view(), name='login'),  # 登录
+    url(r'^login/$', views.LoginView.as_view(), name='login'),  # 登录及登录验证（类视图）
+    url(r'^$', views.UserInfoView.as_view(), name='user'),  # 用户中心个人信息页面
+    url(r'^order/$', views.UserOrderView.as_view(), name='order'),  # 用户中心订单页面
+    url(r'^site/$', views.UserSiteView.as_view(), name='site'),  # 用户中心收货地址
+
 ]
