@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask_wtf import FlaskForm  # 导入扩展表单父类
 from wtforms import StringField, PasswordField, SubmitField  # 导入表单使用的字段类型
 from wtforms.validators import DataRequired, EqualTo  # 导入表单数据验证器
@@ -22,12 +22,30 @@ class RegisterForm(FlaskForm):
     submit = SubmitField(label="提交")
 
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
     """注册页面"""
     # 使用创建的表单类创建表单对象（表单对象可传递到前端模板页面使用其相关属性）
+    # 如果是Post方式提交数据，flask会将提交的数据存储在form对象内
     form = RegisterForm()
+
+    # 2. 数据校验: validate_on_submit-->表单数据满足验证器要求则返回True否则返回False
+    if form.validate_on_submit():
+        # 验证合格
+        # 提取数据(form.属性名返回一个对象，使用data属性提取数据)
+        username = form.username.data
+        password = form.password.data
+        password2 = form.password2.data
+
+        print(username, password, password2)
+        return redirect(url_for("index"))  # 验证成功重定向到首页
+
     return render_template("register.html", form=form)
+
+
+@app.route("/index", methods=["GET"])
+def index():
+    return "index page"
 
 
 if __name__ == "__main__":
