@@ -86,7 +86,7 @@ if __name__ == "__main__":
     # 方法1：使用查询操作查询出对象，对象属性重新赋值，然后将对象添加到数据库会话中，提交即可
     # 方法2：查询的同时更新使用update：User.query.filter_by(name='zhang').update({'name':'li'})
 
-    # 2. 查询操作：查询操作使用db.query（常用）或者db.session.query进行，查询条件指明模型类
+    # 3. 查询操作：查询操作使用db.query（常用）或者db.session.query进行，查询条件指明模型类
 
     # 查询执行器：
     # all()：列表形式返回所有查询结果（模型类对象，可使用对象属性获取数据）
